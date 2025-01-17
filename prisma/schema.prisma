@@ -1,0 +1,208 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                      String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name                    String?
+  email                   String?                @unique
+  emailVerified           DateTime?
+  image                   String?
+  password                String?
+  role                    UserRole               @default(USER)
+  accounts                Account[]
+  isTwoFactorEnabled      Boolean                @default(false)
+  twoFactorConfirmation   TwoFactorConfirmation?
+  twoFactorConfirmationId String?                @db.ObjectId
+  games                   Game[]
+  // sessions                Session[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+// model Session {
+//   id           String   @id @default(cuid()) @map("_id")
+//   sessionToken String   @unique
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@index([userId])
+// }
+
+model Game {
+  id           String         @id @default(cuid()) @map("_id")
+  userId       String         @db.ObjectId
+  topicId      String
+  timeStarted  DateTime
+  timeEnded    DateTime?
+  score        Int // Результат игры
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic        Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  gameQuestion GameQuestion[]
+
+  @@index([userId])
+  @@index([topicId])
+}
+
+model Topic {
+  id          String      @id @default(cuid()) @map("_id")
+  name        String // Название топика (например, "CEHv11")
+  category    String? // Категория или тип топика, если нужно различать темы
+  version     Int // Версия топика (например, версия курса или теста)
+  description String? // Описание топика
+  image       String? // Описание топика
+  questions   Questions[]
+  game        Game[]
+
+  @@unique([name, version, category]) // Уникальный индекс для комбинации
+}
+
+// модель вопросов, связанные с игрой пользователя
+model GameQuestion {
+  id         String    @id @default(cuid()) @map("_id")
+  gameId     String
+  questionId String
+  userAnswer String? // Ответ пользователя
+  isCorrect  Boolean? // Показывает, был ли ответ верным
+  game       Game      @relation(fields: [gameId], references: [id])
+  question   Questions @relation(fields: [questionId], references: [id])
+
+  @@unique([gameId, questionId]) // Уникальность для комбинации gameId и questionId
+}
+
+model Questions {
+  id            String         @id @default(cuid()) @map("_id")
+  question      String // Сам вопрос
+  answer        String // Правильный ответ
+  topicId       String
+  options       String[] // Варианты ответов для вопросов с несколькими вариантами
+  topic         Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  gameQuestions GameQuestion[] // Обратное отношение с GameQuestion
+}
+
+model topicCount {
+  id    String @id @default(cuid()) @map("_id")
+  topic String @unique
+  count Int
+}
+
+model Workflow {
+  id          String  @id @default(cuid()) @map("_id")
+  userId      String  @db.ObjectId
+  name        String
+  description String?
+
+  definition String
+  status     String // DRAFT mode or PUBLISHED mode
+
+  lastRunAt     DateTime?
+  lastRunId     String?
+  lastRunStatus String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  executions WorkflowExecution[]
+
+  // User cannot have two workflow with the same name
+  @@unique([name, userId])
+}
+
+model WorkflowExecution {
+  id          String    @id @default(cuid()) @map("_id")
+  workflowId  String
+  userId      String
+  trigger     String
+  status      String
+  createdAt   DateTime  @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+
+  creditsConsumed Int @default(0)
+
+  phases ExecutionPhase[]
+
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model ExecutionPhase {
+  id          String    @id @default(cuid()) @map("_id")
+  userId      String
+  status      String
+  number      Int
+  node        String
+  name        String
+  startedAt   DateTime?
+  completedAt DateTime?
+  inputs      String?
+  outputs     String?
+
+  creditsConsumed Int?
+
+  workflowExecutionId String
+  execution           WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+}

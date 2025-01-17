@@ -1,0 +1,25 @@
+# TODO List for OpenAPI Parser and Validator
+
+## Features
+- [ ] Parse OpenAPI specification
+- [ ] Validate OpenAPI specification
+- [ ] Generate documentation from OpenAPI specification
+- [ ] Support for OpenAPI 3.0 and 3.1
+- [ ] Command-line interface for parsing and validation
+
+## Enhancements
+- [ ] Improve error messages for validation
+- [ ] Add support for custom validation rules
+- [ ] Integrate with CI/CD pipeline
+- [ ] Add unit tests for parser and validator
+
+## Documentation
+- [ ] Create user guide for the parser
+- [ ] Create user guide for the validator
+- [ ] Add examples of valid and invalid OpenAPI specifications
+
+## Maintenance
+- [ ] Refactor code for better readability
+- [ ] Optimize performance of the parser
+- [ ] Regularly update dependencies
+- [ ] add Dependency cruiser https://www.npmjs.com/package/dependency-cruiser
