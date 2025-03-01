@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
+# Install
+``` 
+npm i --save-deps
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+``` 
+# Run DB
+
+Because prisma db requires using mongodb in cluster
+
+## primary instance run in one terminal (for windows)
+``` 
+mongod --dbpath "C:\Program Files\MongoDB\Server\8.0\data" --logpath "C:\Program Files\MongoDB\Server\8.0\log\mongod.log" --port 27017 --storageEngine=wiredTiger --replSet rs0
+``` 
+## secondary instance run in another terminal (for windows)
+``` 
+mongosh --port 27017
+``` 
+
+## configure db (for linux)
+``` 
+nano /etc/mongod.conf
+``` 
+
+``` 
+#operationProfiling:
+
+replication:
+  replSetName: rs0
+#sharding:
+``` 
+
+
+# Install Docker 
+``` 
+docker run --rm --name redis -p 6379:6379 --network=host redis
+``` 
+
+
+# .env
+
 ```
+# main
+GOOGLE_CLIENT_ID=CHANGE
+GOOGLE_CLIENT_SECRET=CHANGE
+AUTH_SECRET=CHANGE
+RESEND_API_KEY=CHANGE
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+API_SECRET=CHANGE
+ENCRYPTION_KEY=CHANGE
+AUTH_TRUST_HOST=true
+LLM = "deepseek-r1:1.5b"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# For dev
+MONGO_DATABASE_URL="mongodb://127.0.0.1:27017/appsec?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.3"
+AUTH_URL=http://localhost:3000
+API_URL=http://localhost:3000
+TEMP_DIR="E:/temp"
+NEXT_PUBLIC_DEV_MODE = true
+REDIS_HOST=host.docker.internal
+REDIS_PORT=6379
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# For linux
+#TEMP_DIR="/tmp"
+#REDIS_HOST=localhost
+#REDIS_PORT=6379
+#MONGO_DATABASE_URL="mongodb://127.0.0.1:27017/appsec?replicaSet=rs0"
+#API_URL=http://localhost:3000
+#AUTH_URL=http://localhost:3000
+#AUTH_URL_INTERNAL=http://localhost:3000
+#NODE_ENV = production
+```
