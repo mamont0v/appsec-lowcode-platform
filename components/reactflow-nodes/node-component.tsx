@@ -14,8 +14,10 @@ import { NodeOutput, NodeOutputs } from './node-outputs';
 import { Badge } from '../ui/badge';
 
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+
 const NodeComponent = React.memo((props: NodeProps) => {
     const nodeData = props.data as AppNodeData;
+
     const task = TaskRegistry[nodeData.type]
 
     return <NodeCard
@@ -50,4 +52,4 @@ const NodeComponent = React.memo((props: NodeProps) => {
 
 
 export default NodeComponent;
-NodeComponent.displayName = "NodeComponents";
+NodeComponent.displayName = "NodeComponents"; // потому что обернуть useMemo и нужно добавить имя

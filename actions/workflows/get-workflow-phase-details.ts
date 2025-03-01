@@ -5,13 +5,9 @@ import { prisma } from '@/lib/db';
 
 export async function GetWorkflowPhaseDetails(phaseId: string) {
     const session = await auth();
-
-    // Проверяем наличие сессии и user id
-    if (!session || !session.user?.id) {
-        throw new Error("Unauthenticated");
+    if (!session?.user?.id) {
+        throw new Error("unauthenticated");
     }
-
-    // Извлекаем user id из session
     const userId = session.user.id;
 
     return prisma.executionPhase.findUnique({
@@ -19,6 +15,13 @@ export async function GetWorkflowPhaseDetails(phaseId: string) {
             id: phaseId,
             execution: {
                 userId
+            },
+        },
+        include: {
+            logs: {
+                orderBy: {
+                    timestamp: "asc"
+                }
             }
         }
     });

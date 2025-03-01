@@ -6,13 +6,9 @@ import { prisma } from '@/lib/db';
 
 export async function GetWorkflowExecutionWithPhases({ executionId }: { executionId: string }) {
     const session = await auth();
-
-    // Проверяем наличие сессии и user id
-    if (!session || !session.user?.id) {
-        throw new Error("Unauthenticated");
+    if (!session?.user?.id) {
+        throw new Error("unauthenticated");
     }
-
-    // Извлекаем user id из session
     const userId = session.user.id;
 
 

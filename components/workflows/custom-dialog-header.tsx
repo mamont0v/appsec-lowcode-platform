@@ -6,19 +6,10 @@ import { LucideIcon, ProportionsIcon } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-
-interface Props {
-    title?: string;
-    subTitle?: string;
-    icon?: LucideIcon;
-
-    iconClassName?: string;
-    titleClassName?: string;
-    subtitleClassName?: string;
-}
+import { CustomDialogHeaderProps } from '@/types/types';
 
 
-function CustomDialogHeader(props: Props) {
+function CustomDialogHeader(props: CustomDialogHeaderProps) {
     return (
         <DialogHeader className='py-6'>
             <DialogTitle asChild>

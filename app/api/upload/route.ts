@@ -1,3 +1,4 @@
+"server-only";
 import { NextResponse } from 'next/server';
 import { Queue } from 'bullmq';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,7 +12,7 @@ import { exec } from 'child_process';
 const execAsync = promisify(exec);
 
 const QUEUE_NAME = 'upload_queue';
-const TEMP_DIR_BASE = 'E:/temp';
+const TEMP_DIR_BASE = process.env.TEMP_DIR || '/tmp';
 
 
 // Настройка подключения к Redis и очереди BullMQ
@@ -31,22 +32,27 @@ function createDirTemp(taskId: string) {
 }
 
 export async function POST(req: Request) {
+
     try {
         const formData = await req.formData();
-        const file = formData.get('file') as File;
+        const file = formData.get("file") as File;
+        const taskId = formData.get("taskId") as string || uuidv4();  // Используем переданный taskId или генерируем
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
 
         // Генерация уникального UUID для этой задачи
-        const taskId = uuidv4();
+        // const taskId = uuidv4();
         const tempFilePath = createDirTemp(taskId);  // Создаем директорию для задачи
 
         const filePath = path.join(tempFilePath, file.name);
 
         const buffer = await file.arrayBuffer();
-        await fs.promises.writeFile(filePath, Buffer.from(buffer));
+        const binaryData = Buffer.from(buffer); // Преобразуем ArrayBuffer в Buffer
+
+        await fs.promises.writeFile(filePath, binaryData);
+
 
         // Добавление задачи в очередь
         await uploadQueue.add(
@@ -104,6 +110,7 @@ const worker = new Worker(
     QUEUE_NAME,
     async (job) => {
         const { filePath, taskId } = job.data;
+
         const taskTempDir = path.join(TEMP_DIR_BASE, taskId);
 
         // Создание временной директории для задачи
@@ -118,7 +125,7 @@ const worker = new Worker(
         }
 
         // Команда для запуска контейнера
-        const dockerRunCommand = `docker run --name vacuum-container-${taskId} -v "E:/temp/${taskId}:/work:rw" dshanley/vacuum report /work/${path.basename(filePath)} /work/report`;
+        const dockerRunCommand = `docker run --name vacuum-container-${taskId} -v "${TEMP_DIR_BASE}/${taskId}:/work:rw" dshanley/vacuum report /work/${path.basename(filePath)} /work/report`;
 
         try {
             // Запуск контейнера

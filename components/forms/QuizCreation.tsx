@@ -8,9 +8,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { quizCreationSchema } from "@/schemas/forms/quiz";
 import { z } from 'zod';
-import LoadingQuestions from "../loading-questions";
+import LoadingQuestions from "../quiz/loading-questions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BentoGrid, BentoGridItem } from "../quiz/bento-grid";
 
 interface Topic {
   id: string;
@@ -51,7 +52,7 @@ const QuizCreation = ({ topic: topicParam }: { topic: string }) => {
     onSuccess: ({ gameId }: { gameId: string }) => {
       setFinishedLoading(true);
       setTimeout(() => {
-        router.push(`/play/${gameId}`);
+        router.push(`/app/play/${gameId}`);
       }, 2000);
     },
   });
@@ -75,15 +76,15 @@ const QuizCreation = ({ topic: topicParam }: { topic: string }) => {
   }, []);
 
   if (showLoader) return <LoadingQuestions finished={finishedLoading} />;
-
   return (
-    <div className="mt-20">
+    <div className="h-full py-6 flex flex-col gap-4">
       {topics.length === 0 ? (
         <p>Загружаем список тем...</p>
       ) : (
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {topics.map((topic) => (
-            <Card key={topic.id}>
+            <Card key={topic.id} className="flex flex-col gap-2 justify-between items-center py-5">
               <CardHeader>
                 <CardTitle className="flex justify-center text-2xl font-bold ">{topic.name}</CardTitle>
                 <CardDescription className="flex justify-center">{topic.description}</CardDescription>
@@ -92,7 +93,7 @@ const QuizCreation = ({ topic: topicParam }: { topic: string }) => {
                 <Button
                   type="submit"
                   onClick={() => form.setValue("topic", topic.id)}
-                  className="w-11/12 mx-auto"
+                  className=""
                 >
                   Начать
                 </Button>

@@ -8,24 +8,20 @@ import { AppNode } from "@/types/app-node";
 import { Edge } from "@xyflow/react";
 import { TaskType } from "@/types/task";
 import { CreateFlowNode } from "@/lib/workflow/create-flow-node";
+import { revalidatePath } from "next/cache";
 
 export async function CreateWorkflow(values: createWorkflowSchemaType) {
+    const session = await auth();
+    if (!session?.user?.id) {
+        throw new Error("unauthenticated");
+    }
+    const userId = session.user.id;
+
     const { success, data } = createWorkflowSchema.safeParse(values);
 
     if (!success || !data) {
         throw new Error("invalid form data");
     }
-
-    // Проверка на наличие session и session.user?.id
-    const session = await auth();
-
-    if (!session || !session.user?.id) {
-        throw new Error("unauthenticated");
-    }
-
-    const userId = session.user.id;
-
-
     // Проверка на существующий workflow
     const existingWorkflow = await prisma.workflow.findUnique({
         where: {
@@ -45,7 +41,8 @@ export async function CreateWorkflow(values: createWorkflowSchemaType) {
         nodes: [],
         edges: []
     }
-    initialFlow.nodes.push(CreateFlowNode(TaskType.LAUNCH_BROWSER))
+    // TODO: Обязательный запуск браузера    
+    // initialFlow.nodes.push(CreateFlowNode(TaskType.UPLOAD_OPENAPI_FILE))
 
 
     const result = await prisma.workflow.create({
@@ -60,6 +57,9 @@ export async function CreateWorkflow(values: createWorkflowSchemaType) {
     if (!result) {
         throw new Error("failed to create workflow");
     }
+
+    // TODO: Нужен ли тут ререндер?
+    revalidatePath("/app/workflows");
 
     return result;
 }

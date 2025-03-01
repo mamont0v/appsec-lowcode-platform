@@ -148,7 +148,7 @@ module.exports = {
         'section of your package.json. If this module is development only - add it to the ' +
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
-        path: '^(app|hooks|utils|types|schemas|actions|common|components|constants|context|data)',
+        path: '^(actions|app|common|components|constants|context|hooks|lib|prisma|types|schemas|utils)',
         pathNot: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$'
       },
       to: {
@@ -248,7 +248,7 @@ module.exports = {
        true: also detect dependencies that only exist before typescript-to-javascript compilation
        "specify": for each dependency identify whether it only exists before compilation or also after
      */
-    // tsPreCompilationDeps: false,
+    tsPreCompilationDeps: true,
     
     /* list of extensions to scan that aren't javascript or compile-to-javascript.
        Empty by default. Only put extensions in here that you want to take into
@@ -398,4 +398,4 @@ module.exports = {
     }
   }
 };
-// generated: dependency-cruiser@16.9.0 on 2025-01-17T15:48:41.040Z
+// generated: dependency-cruiser@16.9.0 on 2025-01-18T06:15:13.675Z

@@ -5,16 +5,23 @@ import { auth } from "@/auth";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/components/providers/providers";
-
-// const inter = Inter({ subsets: ["latin"] });
+import { redirect } from "next/navigation";
+import { DM_Sans, Poppins } from "next/font/google";
+import { cn } from '../lib/utils';
 
 export const metadata: Metadata = {
-  title: "Next Auth | NextJS",
-  description: "Authentication using next-auth-v5",
+  title: "Inspector Security",
+  description: "Платформа для кибербезопасности",
   icons: {
-    icon: "/icon.png",
+    icon: "/agent-colorized.svg",
   },
 };
+
+
+
+const font = DM_Sans({
+  subsets: ["latin"],
+})
 
 export default async function RootLayout({
   children,
@@ -26,8 +33,8 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en">
-        {/* <body className={inter.className}> */}
-        <body>
+        {/* <body className=antialiased min-h-screen pt-1 */}
+        <body className={cn(font.className, "antialiased")}>
           <Providers>
             <Toaster richColors />
             {children}

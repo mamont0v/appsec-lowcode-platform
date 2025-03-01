@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {
     Accordion,
     AccordionContent,
@@ -10,28 +10,54 @@ import {
 import { TaskRegistry } from '@/lib/workflow/task/registry';
 import { TaskType } from '@/types/task';
 import { Button } from '../ui/button';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/resizable';
 
+interface TaskMenuProps {
+    children: ReactNode;
+}
 
-function TaskMenu() {
+function TaskMenu({ children }: TaskMenuProps) {
     return (
-        <aside className='w-[340px] min-w-[340px] max-[340px] border-r-2 border-separate h-full p-2 px-4 overflow-auto'>
-            <Accordion
-                type="multiple"
-                className='w-full'
-                defaultValue={["extraction"]}
-            >
-                <AccordionItem value='extraction'>
-                    <AccordionTrigger className='font-bold'>
-                        Data extraction
-                    </AccordionTrigger>
-                    <AccordionContent className='flex flex-col gap-1'>
-                        <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />
-                        <TaskMenuBtn taskType={TaskType.EXTRACT_TEXT_FROM_ELEMENT} />
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-        </aside>
-    )
+        <ResizablePanelGroup direction="horizontal" className="h-full">
+            {/* Левая панель (меню задач) */}
+            <ResizablePanel defaultSize={20} minSize={10} maxSize={30} className="border-r">
+                <aside className="h-full p-2 px-4 overflow-auto">
+                    <Accordion
+                        type="multiple"
+                        className="w-full"
+                        defaultValue={[
+                            "openapi",
+                            "initial",
+                            "extraction",
+                            "interactions",
+                            "timing",
+                            "results",
+                            "storage",
+                        ]}
+                    >
+                        <AccordionItem value="openapi">
+                            <AccordionTrigger className="font-bold">OpenAPI</AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-1">
+                                <TaskMenuBtn taskType={TaskType.UPLOAD_OPENAPI_FILE} />
+                                <TaskMenuBtn taskType={TaskType.LINTER_OPENAPI} />
+                                <TaskMenuBtn taskType={TaskType.EXTRACT_DATA_WITH_AI} />
+                                <TaskMenuBtn taskType={TaskType.REPORT} />
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </aside>
+            </ResizablePanel>
+
+            {/* Полоса для изменения размера */}
+            <ResizableHandle withHandle className="w-2 bg-gray-300 hover:bg-gray-400 cursor-ew-resize" />
+
+            {/* Правая панель (основной контент) */}
+            <ResizablePanel defaultSize={80} minSize={50} className="p-4">
+                {children}
+
+            </ResizablePanel>
+        </ResizablePanelGroup>
+    );
 }
 
 function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
@@ -59,4 +85,4 @@ function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
     )
 }
 
-export default TaskMenu
+export default TaskMenu;

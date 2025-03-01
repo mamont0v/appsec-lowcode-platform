@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { ChevronRight } from 'lucide-react';
 
-
+// TODO:
 function BreadcrumbHeader() {
     const pathName = usePathname();
     const paths = pathName === "/" ? [""] : pathName?.split("/").filter(Boolean);
@@ -26,7 +26,7 @@ function BreadcrumbHeader() {
                                 {path === "" ? "app" : path}
                             </BreadcrumbLink>
                         </BreadcrumbItem>
-                        {index < paths.length - 1 && <ChevronRight className="h-4 w-4 mx-2" />}
+                        {index !== paths.length - 1 && <ChevronRight className="h-4 w-4 mx-2" />}
                     </React.Fragment>
                 ))}
             </Breadcrumb>

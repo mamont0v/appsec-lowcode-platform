@@ -39,7 +39,10 @@ function CreateWorkflowDialog({ triggerText }: { triggerText?: string }) {
 
     const form = useForm<createWorkflowSchemaType>({
         resolver: zodResolver(createWorkflowSchema),
-        defaultValues: {}
+        defaultValues: {
+            name: '',
+            description: ''
+        }
     });
 
     const { mutate, isPending } = useMutation({
@@ -47,7 +50,7 @@ function CreateWorkflowDialog({ triggerText }: { triggerText?: string }) {
         onSuccess: (result) => {
             toast.success("Рабочий процесс создан", { id: "create-workflow" })
             // Ожидаем успешное закрытие toast, а затем редиректим
-            router.push(`/workflow/editor/${result.id}`);
+            router.push(`/app/workflow/editor/${result.id}`);
 
         },
         onError: (error) => {
@@ -71,8 +74,8 @@ function CreateWorkflowDialog({ triggerText }: { triggerText?: string }) {
             <DialogContent className='px-0'>
                 <CustomDialogHeader
                     icon={Layers2Icon}
-                    title="Create workflow"
-                    subTitle="Start building your workflow"
+                    title="Создать рабочий процесс"
+                    subTitle="Начни строить пайплайн рабочего процесса"
                 />
                 <div className="p-6">
                     <Form {...form}>
@@ -83,7 +86,7 @@ function CreateWorkflowDialog({ triggerText }: { triggerText?: string }) {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className='flex gap-1 items-center'>
-                                            Name
+                                            Имя процесса
                                             <p className="text-xs text-primary">(required)</p>
                                         </FormLabel>
                                         <FormControl>

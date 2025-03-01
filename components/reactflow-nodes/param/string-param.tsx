@@ -27,7 +27,6 @@ function StringParam({
         Component = Textarea;
     }
 
-
     return (
         <div className='space-y-1 p-1 w-full'>
             <Label htmlFor={id} className='text-xs flex'>

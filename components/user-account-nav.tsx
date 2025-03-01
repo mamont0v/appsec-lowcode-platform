@@ -31,7 +31,7 @@ const UserAccountNav = ({ user }: Props) => {
           }}
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-white" align="end">
+      <DropdownMenuContent className="" align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
@@ -42,10 +42,10 @@ const UserAccountNav = ({ user }: Props) => {
             )}
           </div>
         </div>
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href="/">Meow</Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <DropdownMenuSeparator />
 
@@ -56,7 +56,7 @@ const UserAccountNav = ({ user }: Props) => {
           }}
           className="text-red-600 cursor-pointer"
         >
-          Sign out
+          Выйти
           <LogOut className="w-4 h-4 ml-2 " />
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -18,7 +18,7 @@ function ExecuteButton({ workflowId }: { workflowId: string }) {
         mutationFn: RunWorkflow,
         onSuccess: (execution) => {
             toast.success('Пайплайн запущен', { id: "execution-workflow" });
-            router.push(`/workflow/runs/${workflowId}/${execution.id}`);
+            router.push(`/app/workflow/runs/${workflowId}/${execution.id}`);
 
         },
         onError: () => {

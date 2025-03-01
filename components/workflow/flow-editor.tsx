@@ -3,7 +3,7 @@
 import { CreateFlowNode } from '@/lib/workflow/create-flow-node';
 import { TaskType } from '@/types/task';
 import { Workflow } from '@prisma/client';
-import { ReactFlow, useNodesState, useEdgesState, Background, Controls, BackgroundVariant, useReactFlow, Connection, addEdge, Edge, getOutgoers } from '@xyflow/react';
+import { ReactFlow, useNodesState, useEdgesState, Background, Controls, BackgroundVariant, useReactFlow, Connection, addEdge, Edge, getOutgoers, MiniMap } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useCallback, useEffect } from 'react'
 import NodeComponent from '../reactflow-nodes/node-component';
@@ -11,33 +11,19 @@ import { AppNode } from '@/types/app-node';
 import DeletableEdges from '../reactflow-edges/deletable-edge';
 import { TaskRegistry } from '@/lib/workflow/task/registry';
 
-
+// Создать другие узлы
 const nodeTypes = {
-    FlowScrapeNode: NodeComponent
+    FlowScrapeNode: NodeComponent // FlowScrapeNode это имя нашего компонента, если мы хотим создать какой то другой компонент то нужно как в create-flow-node создать похожий объект
 }
 
 const edgeTypes = {
     default: DeletableEdges,
 }
 
-
-
 const snapGrid: [number, number] = [20, 20]
-
 const fitViewOptions = { padding: 3 }
 
-
-/**
- * FlowEditor
- * Компонент для редактирования workflow.
- *
- * @param {Workflow} workflow - Данные workflow из базы Prisma.
- * @returns {JSX.Element} React-компонент для редактирования workflow.
- */
-
-
 function FlowEditor({ workflow }: { workflow: Workflow }) {
-
     // Состояния для управления узлами и связями графа
     const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -48,6 +34,7 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
     useEffect(() => {
         try {
             const flow = JSON.parse(workflow.definition)
+
             if (!flow) return;
             setNodes(flow.nodes || []);
             setEdges(flow.edges || []);
@@ -98,7 +85,8 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
         });
 
 
-        // работает тоже
+        // TODO: работает тоже
+
         // setNodes((prevNodes) =>
         //     prevNodes.map((node) => {
         //         if (node.id === connection.target) {
@@ -117,6 +105,8 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
         //         return node;
         //     })
         // );
+
+        // console.log("Node connected:", node.id, "with inputs:", nodeInputs);
     },
         [setEdges, updateNodeData, nodes]
     );
@@ -131,6 +121,8 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
         // same taskparam type connection
         const source = nodes.find((node) => node.id === connection.source);
         const target = nodes.find((node) => node.id === connection.target);
+
+
         if (!source || !target) {
             return false;
         }
@@ -165,7 +157,6 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
     }, [nodes, edges])
 
 
-
     return (
         <main className="h-full w-full">
             <ReactFlow
@@ -184,8 +175,8 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
                 // }}
                 nodeTypes={nodeTypes} // стилизация блоков
                 edgeTypes={edgeTypes} // стилизация линий
-                snapToGrid // equal snapToGrid={true}
-                snapGrid={snapGrid}
+                // snapToGrid // equal snapToGrid={true}
+                // snapGrid={snapGrid}
                 fitViewOptions={fitViewOptions}
                 //fitView // if uncomment this, we centered worfklow after restart page 
 
@@ -194,9 +185,21 @@ function FlowEditor({ workflow }: { workflow: Workflow }) {
                 // drag button from sidebar.js
                 onDragOver={onDragOver}
                 onDrop={onDrop}
+                proOptions={{ hideAttribution: true }}
             >
-                <Controls position='top-left' fitViewOptions={fitViewOptions} />
+                <Controls
+                    position='top-left'
+                    fitViewOptions={fitViewOptions}
+                    showZoom
+                />
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                <MiniMap
+                    position='top-right'
+                    className='!bg-background'
+                    zoomable
+                    pannable
+
+                />
             </ReactFlow>
         </main >
     )

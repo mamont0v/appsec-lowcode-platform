@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import LoginForm from "@/components/auth/login-form";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface LoginButtonProps {
   children: React.ReactNode;
@@ -18,13 +20,16 @@ const LoginButton = ({
 }: LoginButtonProps) => {
   const router = useRouter();
   const onClick = () => {
-    router.push("/auth/login");
+    router.push("https://inspectors.tech/login");
   };
 
   if (mode === "modal") {
     return (
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+        <DialogTitle>
+          <VisuallyHidden>Login</VisuallyHidden>
+        </DialogTitle>
         <DialogContent className="p-0 w-auto bg-transparent border-none">
           <LoginForm />
         </DialogContent>

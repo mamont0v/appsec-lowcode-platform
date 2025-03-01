@@ -1,16 +1,16 @@
 "use client";
 
+import React from 'react'
 import { cn } from '@/lib/utils'
 import { TaskParam } from '@/types/task'
 import { Handle, Position, useEdges } from '@xyflow/react'
-import React, { useCallback } from 'react'
 import NodeParamField from './node-param-field'
 import { ColorForHandle } from '@/common/colors-for-handle';
 import useFlowValidation from '@/hooks/use-flow-validation';
 
 export function NodeInputs({ children }: { children: React.ReactNode }) {
     return (
-        <div className='flex flex-col divide-y gap-2'>{children}</div>
+        <div className='flex flex-col divide-y gap-2 '>{children}</div>
     )
 }
 
@@ -24,14 +24,12 @@ export function NodeInput({
     const edges = useEdges();
     const isConnected = edges.some((edge) => edge.target === nodeId && edge.targetHandle === input.name);
     const hasErrors = invalidInputs.find(node => node.nodeId === nodeId)?.inputs.find(invalidInput => invalidInput === input.name);
-
-    return <div className={cn('flex justify-start relative p-3 bg-secondary w-full', hasErrors && 'bg-destructive/30')}>
+    return <div className={cn('flex justify-start relative p-3 bg-secondary w-full !rounded-[4px]', hasErrors && 'bg-destructive/30')}>
         <NodeParamField
             param={input}
             nodeId={nodeId}
             disabled={isConnected}
         />
-
         {!input.hideHandle && (
             <Handle
                 id={input.name}

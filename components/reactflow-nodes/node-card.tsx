@@ -3,7 +3,6 @@
 import useFlowValidation from '@/hooks/use-flow-validation';
 import { cn } from '@/lib/utils';
 import { useReactFlow } from '@xyflow/react';
-import React from 'react'
 
 function NodeCard({
     children,

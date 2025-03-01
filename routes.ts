@@ -3,7 +3,21 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/auth/new-verification"];
+export const publicRoutes = [
+  "/",
+  "/auth/new-verification",
+
+  "/api/game",
+  "/api/endGame",
+  "/api/checkAnswer",
+  "/api/questions",
+  "/api/topics",
+  "/api/workflows/cron",
+  "/api/workflows/execute",
+  "/api/upload",
+  "/api/unauth-check",
+
+];
 
 /**
  * An array of routes that are used for authentication
@@ -11,6 +25,7 @@ export const publicRoutes = ["/", "/auth/new-verification"];
  * @type {string[]}
  */
 export const authRoutes = [
+  "/",
   "/auth/login",
   "/auth/register",
   "/auth/error",
@@ -18,17 +33,17 @@ export const authRoutes = [
   "/auth/new-password",
 ];
 
-/**
- * The prefix for API authentication routes
- * Routes that start with this prefix are used for API authentication puposes
- * @type {string}
- */
+
+export const dashboardRoutes = [
+  "/app",
+  "/app/workflows",
+  "/app/billing"
+]
+
 export const apiAuthPrefix = "/api/auth";
 
 // TODO: route to dashboard mb?
 
-/**
- * The default redirect path after loggin in
- * @type {string}
- */
+// TODO: сделать API общедоступными наверное
+
 export const DEFAULT_LOGIN_REDIRECT = "/app";

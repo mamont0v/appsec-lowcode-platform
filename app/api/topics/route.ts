@@ -1,5 +1,5 @@
 // app/api/topics/route.js
-import { getAuthSession } from "@/lib/nextauth";
+import { auth } from "@/auth";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -7,10 +7,8 @@ const prisma = new PrismaClient();
 
 export const GET = async (req: Request) => {
     try {
-
-        // check auth
-        const session = await getAuthSession();
-        if (!session?.user) {
+        const session = await auth();
+        if (!session?.user?.id) {
             return NextResponse.json(
                 {
                     error: "Please auth"
@@ -19,6 +17,8 @@ export const GET = async (req: Request) => {
 
             )
         }
+        // const userId = session.user.id;
+
 
         const topics = await prisma.topic.findMany();
 

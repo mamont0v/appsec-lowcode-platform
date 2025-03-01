@@ -23,3 +23,16 @@
 - [ ] Optimize performance of the parser
 - [ ] Regularly update dependencies
 - [ ] add Dependency cruiser https://www.npmjs.com/package/dependency-cruiser
+
+
+-[ ] Add security.txt, robots.txt
+-[ ] add console.log massage 
+
+```
+console.log(
+  '%c I have %d %s',
+  'color: green; background:black; font-size: 20pt',
+  3,
+  'Bikes!'
+)
+```

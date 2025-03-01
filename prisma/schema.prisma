@@ -27,6 +27,8 @@ model User {
   twoFactorConfirmationId String?                @db.ObjectId
   games                   Game[]
   // sessions                Session[]
+  UserBalance             UserBalance?
+  ExecutionPhase          ExecutionPhase[]
 }
 
 model Account {
@@ -115,8 +117,8 @@ model Topic {
   version     Int // Версия топика (например, версия курса или теста)
   description String? // Описание топика
   image       String? // Описание топика
-  questions   Questions[]
   game        Game[]
+  questions   Questions[]
 
   @@unique([name, version, category]) // Уникальный индекс для комбинации
 }
@@ -156,6 +158,13 @@ model Workflow {
   name        String
   description String?
 
+  creditsCost   Int     @default(0)
+  executionPlan String?
+
+  // cron
+  cron      String? // * * * *
+  nextRunAt DateTime?
+
   definition String
   status     String // DRAFT mode or PUBLISHED mode
 
@@ -181,6 +190,7 @@ model WorkflowExecution {
   createdAt   DateTime  @default(now())
   startedAt   DateTime?
   completedAt DateTime?
+  definition  String    @default("{}")
 
   creditsConsumed Int @default(0)
 
@@ -204,5 +214,57 @@ model ExecutionPhase {
   creditsConsumed Int?
 
   workflowExecutionId String
-  execution           WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade) // Связь с пользователем
+  logs                ExecutionLog[]
+
+  execution WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+}
+
+model ExecutionLog {
+  id        String @id @default(cuid()) @map("_id")
+  logLevel  String
+  message   String
+  timestamp String
+
+  executionPhaseId String
+  executionPhase   ExecutionPhase @relation(fields: [executionPhaseId], references: [id], onDelete: Cascade)
+}
+
+model UserBalance {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String @unique @db.ObjectId
+  credits Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Credential {
+  id     String @id @default(cuid()) @map("_id")
+  userId String
+  name   String
+  value  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, name])
+}
+
+// User transations
+model UserPurchase {
+  id          String   @id @default(cuid()) @map("_id") // Уникальный идентификатор
+  userId      String
+  yandexId    String
+  description String
+  amount      Int
+  currency    String
+  date        DateTime @default(now())
+}
+
+model Report {
+  id        String   @id @default(cuid()) @map("_id") // Уникальный идентификатор
+  userId    String
+  reportId  String
+  data      Json // Поле для хранения данных отчета в формате JSON
+  createdAt DateTime @default(now()) // Время создания отчета
+  updatedAt DateTime @updatedAt // Время последнего обновления отчета
 }

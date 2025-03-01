@@ -1,23 +1,25 @@
+"use server";
+
 import { prisma } from "@/lib/db";
 import { checkAnswerSchema } from "@/schemas/questions";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import stringSimilarity from "string-similarity";
-import { getAuthSession } from "@/lib/nextauth";
+import { auth } from "@/auth";
 
 export async function POST(req: Request) {
   try {
-    // check auth
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json(
         {
-          error: "Please auth"
+          error: "You must be logged in to create a game."
         },
         { status: 401 }
 
       )
     }
+    // const userId = session.user.id;
 
     const body = await req.json();
 

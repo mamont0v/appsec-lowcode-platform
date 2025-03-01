@@ -13,14 +13,14 @@ async function main() {
     },
   });
 
-  await prisma.topic.create({
-    data: {
-      name: "OSCP",
-      category: "Penetration Testing",
-      version: 1,
-      description: "Offensive Security Certified Professional Exam"
-    },
-  });
+  //   await prisma.topic.create({
+  //     data: {
+  //       name: "OSCP",
+  //       category: "Penetration Testing",
+  //       version: 1,
+  //       description: "Offensive Security Certified Professional Exam"
+  //     },
+  //   });
 }
 
 

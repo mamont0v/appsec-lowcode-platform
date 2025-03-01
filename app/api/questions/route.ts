@@ -1,21 +1,20 @@
-import { quizCreationSchema } from './../../../schemas/forms/quiz';
-import { strict_output } from "@/lib/gpt";
-import { getAuthSession } from "@/lib/nextauth";
-import { getQuestionsSchema } from "@/schemas/questions";
+"use server";
+
+import { quizCreationSchema } from '@/schemas/forms/quiz';
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { prisma } from "@/lib/db"; // Импортируем Prisma Client
-import { error } from "console";
+import { auth } from '@/auth';
 
-export const runtime = "nodejs";
-export const maxDuration = 500;
+// export const runtime = "nodejs";
+// export const maxDuration = 500;
 
 // POST api/questions
 export const POST = async (req: Request, res: Response) => {
   try {
     // check auth
-    const session = await getAuthSession();
-    if (!session?.user) {
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json(
         {
           error: "Please auth"
@@ -24,7 +23,9 @@ export const POST = async (req: Request, res: Response) => {
 
       )
     }
-    
+    // const userId = session.user.id;
+
+
     const body = await req.json();
     const { topic } = quizCreationSchema.parse(body);
 

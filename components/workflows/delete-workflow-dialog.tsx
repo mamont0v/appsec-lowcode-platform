@@ -48,11 +48,11 @@ function DeleteWorkflowDialog({ open, setOpen, workflowName, workflowId }: Props
                     <AlertDialogTitle>Вы точно уверены?</AlertDialogTitle>
                     <AlertDialogDescription>
                         Если вы удалите этот рабочий процесс, вы не сможете его больше восстановить.
-                        <div className="flex flex-col py-4 gap-2 items-center">
-                            <p>Если вы уверены, введите полностью название рабочего процесса <b>{workflowName}</b> в поле для подтверждения.</p>
-                            <Input value={confirmText} onChange={(event) => setConfirmText(event.target.value)} />
-                        </div>
                     </AlertDialogDescription>
+                    <div className="flex flex-col py-4 gap-2 items-center">
+                        <span>Если вы уверены, введите полностью название рабочего процесса <b>{workflowName}</b> в поле для подтверждения.</span>
+                        <Input value={confirmText} onChange={(event) => setConfirmText(event.target.value)} />
+                    </div>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={() => setConfirmText("")}>

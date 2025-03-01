@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db';
 import { ExecuteWorkflow } from "@/lib/workflow/execute-workflow";
 import { FlowToExecutionPlan } from "@/lib/workflow/execution-plan";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
-import { WorkflowExecutionPhaseTrigger, WorkflowExecutionPlan, WorkflowExecutionStatus } from "@/types/workflow";
+import { WorkflowExecutionPhaseTrigger, WorkflowExecutionPlan, WorkflowExecutionStatus, WorkflowStatus } from "@/types/workflow";
 
 
 
@@ -14,13 +14,9 @@ export async function RunWorkflow(form: {
     flowDefinition?: string;
 }) {
     const session = await auth();
-
-    // Проверяем наличие сессии и user id
-    if (!session || !session.user?.id) {
-        throw new Error("Unauthenticated");
+    if (!session?.user?.id) {
+        throw new Error("unauthenticated");
     }
-
-    // Извлекаем user id из session
     const userId = session.user.id;
 
     const { workflowId, flowDefinition } = form;
@@ -40,23 +36,35 @@ export async function RunWorkflow(form: {
     }
 
     let executionPlan: WorkflowExecutionPlan;
-    if (!flowDefinition) {
-        throw new Error("Missing flowDefinition");
+
+    let workflowDefinition = flowDefinition;
+
+    if (workflow.status === WorkflowStatus.PUBLISHED) {
+        if (!workflow.executionPlan) {
+            throw new Error("no execution plan found in published workflow")
+        }
+
+        executionPlan = JSON.parse(workflow.executionPlan);
+        workflowDefinition = workflow.definition;
+    } else {
+        if (!flowDefinition) {
+            throw new Error("Missing flowDefinition");
+        }
+
+        const flow = JSON.parse(flowDefinition);
+
+        const result = FlowToExecutionPlan(flow.nodes, flow.edges);
+        if (result.error) {
+            throw new Error("flow definition not valid");
+        }
+
+        if (!result.executionPlan) {
+            throw new Error("flow definition not valid");
+        }
+
+        executionPlan = result.executionPlan;
     }
 
-    const flow = JSON.parse(flowDefinition);
-
-    const result = FlowToExecutionPlan(flow.nodes, flow.edges);
-    if (result.error) {
-        throw new Error("flow definition not valid");
-    }
-
-    if (!result.executionPlan) {
-        throw new Error("flow definition not valid");
-    }
-
-    executionPlan = result.executionPlan;
-    console.log(executionPlan);
 
     const execution = await prisma.workflowExecution.create({
         data: {
@@ -65,12 +73,13 @@ export async function RunWorkflow(form: {
             status: WorkflowExecutionStatus.PENDING,
             startedAt: new Date(),
             trigger: WorkflowExecutionPhaseTrigger.MANUAL,
+            definition: workflowDefinition,
             phases: {
                 create: executionPlan.flatMap((phase, index) => {
                     return phase.nodes.flatMap((node) => {
                         return {
                             userId,
-                            status: WorkflowExecutionStatus.CREATED,
+                            status: WorkflowExecutionStatus.COMPLETED,
                             number: phase.phase,
                             node: JSON.stringify(node),
                             name: TaskRegistry[node.data.type].label,

@@ -51,7 +51,7 @@ const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values, callbackUrl )
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset();
@@ -73,17 +73,19 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Добро пожаловать"
-      backButtonLabel="Нет учетной записи?"
-      backButtonHref="/auth/register"
+      headerLabel="Only Google provider available"
+      backButtonLabel="Вернуться на сайт"
+      backButtonHref="/"
       showSocial
     >
-      <Form {...form}>
+
+      {/* TODO: */}
+      {/* <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             {showTwoFactor && (
               <>
-                {/* 2FA */}
+               
                 <FormField
                   control={form.control}
                   name="code"
@@ -105,7 +107,7 @@ const LoginForm = () => {
             )}
             {!showTwoFactor && (
               <>
-                {/* Email */}
+                
                 <FormField
                   control={form.control}
                   name="email"
@@ -125,7 +127,7 @@ const LoginForm = () => {
                   )}
                 />
 
-                {/* Password */}
+                
                 <FormField
                   control={form.control}
                   name="password"
@@ -166,7 +168,7 @@ const LoginForm = () => {
             {showTwoFactor ? "Confirm" : "Войти"}
           </Button>
         </form>
-      </Form>
+      </Form> */}
     </CardWrapper>
   );
 };

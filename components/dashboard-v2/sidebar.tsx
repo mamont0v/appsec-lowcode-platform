@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeIcon, MenuIcon } from 'lucide-react';
+import { GraduationCap, HomeIcon, Key, MenuIcon, ReceiptRussianRuble, Settings, Workflow } from 'lucide-react';
 import React, { useState, Suspense } from 'react';
 import Logo from '@/components/logo';
 import Link from 'next/link';
@@ -14,22 +14,38 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
+import UserAvailableCreditsBadge from '../user-available-credits-badge';
 
 const routes = [
     {
         href: "/app",
-        label: "App",
+        label: "Дашборд",
         icon: HomeIcon
     },
     {
         href: "/app/workflows",
-        label: "Workflows",
-        icon: HomeIcon
+        label: "Рабочие процессы",
+        icon: Workflow
+    },
+    // {
+    //     href: "/app/billing",
+    //     label: "Платежи",
+    //     icon: ReceiptRussianRuble
+    // },
+    {
+        href: "/app/quiz",
+        label: "Квиз",
+        icon: GraduationCap
     },
     {
-        href: "/app/billing",
-        label: "Home",
-        icon: HomeIcon
+        href: "/app/credentials",
+        label: "Учетные данные",
+        icon: Key
+    },
+    {
+        href: "/app/settings",
+        label: "Настройки",
+        icon: Settings
     }
 ];
 
@@ -46,7 +62,7 @@ export function DesktopSidebar() {
                 <Logo />
             </div>
             <div className="p-2">
-                credits
+                <UserAvailableCreditsBadge />
             </div>
             <div className="flex flex-col">
                 {/* TODO: Переделать оберку для кнопки ButtonWrapper */}
@@ -87,6 +103,7 @@ export function MobileSidebar() {
                     </SheetTrigger>
                     <SheetContent className='w-[400px] sm:w-[540px] space-y-4' side={"left"}>
                         <Logo />
+                        <UserAvailableCreditsBadge />
                         <SheetTitle></SheetTitle>
                         <SheetDescription></SheetDescription>
                         <div className='flex flex-col gap-1'>

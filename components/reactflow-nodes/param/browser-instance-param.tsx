@@ -6,7 +6,6 @@ import React from 'react'
 
 
 function BrowserInstanceParam({ param }: ParamProps) {
-
     return (
         <p className='text-sm'>{param.name}</p>
     )

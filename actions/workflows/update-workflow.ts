@@ -11,12 +11,9 @@ export async function UpdateWorkflow({
     id: string, definition: string
 }) {
     const session = await auth();
-
-    // Проверка на наличие session и session.user?.id
-    if (!session || !session.user?.id) {
+    if (!session?.user?.id) {
         throw new Error("unauthenticated");
     }
-
     const userId = session.user.id;
 
     if (!userId) {

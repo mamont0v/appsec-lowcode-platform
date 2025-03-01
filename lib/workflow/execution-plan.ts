@@ -2,7 +2,6 @@ import { AppNode, AppNodeMissingInputs } from "@/types/app-node";
 import { WorkflowExecutionPlan, WorkflowExecutionPlanPhase } from "@/types/workflow"
 import { Edge } from "@xyflow/react";
 import { TaskRegistry } from "./task/registry";
-import { error } from 'console';
 
 
 export enum FlowToExecutionPlanValidationError {
@@ -25,11 +24,11 @@ export function FlowToExecutionPlan(
 ): FlowToExecutionPlanType {
 
     // Поиск начальной точки: Ищется узел (entryPoint), который является точкой входа (определяется с помощью TaskRegistry[node.data.type].isEntryPoint).
-    const entryPoint = nodes.find(
-        (node) => TaskRegistry[node.data.type].isEntryPoint
+    const anyPoint = nodes.find(
+        (node) => TaskRegistry[node.data.type]
     );
 
-    if (!entryPoint) {
+    if (!anyPoint) {
         return {
             error: {
                 type: FlowToExecutionPlanValidationError.MISSING_ENTRY_POINT
@@ -39,23 +38,18 @@ export function FlowToExecutionPlan(
 
     const inputsWithErrors: AppNodeMissingInputs[] = [];
     const planned = new Set<string>();
-    const invalidInputs = getInvalidInputs(entryPoint, edges, planned);
+    const invalidInputs = getInvalidInputs(anyPoint, edges, planned);
 
     if (invalidInputs.length > 0) {
         inputsWithErrors.push({
-            nodeId: entryPoint.id,
+            nodeId: anyPoint.id,
             inputs: invalidInputs
         });
     }
     // Инициализация плана выполнения: Создается начальная фаза (phase 1), содержащая точку входа.
-    const executionPlan: WorkflowExecutionPlan = [
-        {
-            phase: 1,
-            nodes: [entryPoint]
-        }
-    ];
+    const executionPlan: WorkflowExecutionPlan = [];
 
-    planned.add(entryPoint.id);
+    // planned.add(entryPoint.id);
 
     for (let phase = 2; phase <= nodes.length && planned.size < nodes.length; phase++) {
         const nextPhase: WorkflowExecutionPlanPhase = { phase, nodes: [] };
@@ -67,14 +61,12 @@ export function FlowToExecutionPlan(
             }
 
             const invalidInputs = getInvalidInputs(currentNode, edges, planned);
+
             if (invalidInputs.length > 0) {
                 // extact data from card
                 const incomers = getIncomers(currentNode, nodes, edges);
-
                 if (incomers.every((incomer) => planned.has(incomer.id))) {
-
                     console.error("invalid inputs", currentNode.id, invalidInputs);
-
                     inputsWithErrors.push({
                         nodeId: currentNode.id,
                         inputs: invalidInputs
@@ -108,9 +100,14 @@ export function FlowToExecutionPlan(
 function getInvalidInputs(node: AppNode, edges: Edge[], planned: Set<string>) {
     const invalidInputs = [];
     const inputs = TaskRegistry[node.data.type].inputs;
+
+
     for (const input of inputs) {
         const inputValue = node.data.inputs[input.name];
-        const inputValueProvided = inputValue?.length > 0;
+
+
+        const inputValueProvided = typeof inputValue === 'string' && inputValue.length > 0;
+
 
         if (inputValueProvided) {
             continue;

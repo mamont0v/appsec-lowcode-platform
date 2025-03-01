@@ -1,0 +1,218 @@
+{
+    "apiTitle": "OWASP crAPI API",
+    "description": "",
+    "level": "info",
+    "msg": "Done",
+    "results": [
+        {
+            "method": "GET",
+            "status": 0,
+            "target": "http://crapi.apisec.ai/community/api/v2/community/posts/recent?limit=1&offset=1"
+        },
+        {
+            "method": "GET",
+            "status": 0,
+            "target": "http://crapi.apisec.ai/workshop/api/management/users/all?limit=1&offset=1"
+        },
+        {
+            "method": "GET",
+            "status": 0,
+            "target": "http://crapi.apisec.ai/workshop/api/mechanic/service_requests?limit=1&offset=1"
+        },
+        {
+            "method": "GET",
+            "status": 0,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/orders/all?limit=1&offset=1"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/community/api/v2/community/posts/%7BpostId%7D"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/dashboard"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/videos/1"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/videos/convert_video?video_id=1"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/vehicle/%7BvehicleId%7D/location"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/vehicle/vehicles"
+        },
+        {
+            "method": "GET",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/orders/1"
+        },
+        {
+            "method": "GET",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/mechanic/"
+        },
+        {
+            "method": "GET",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/mechanic/mechanic_report?report_id=1"
+        },
+        {
+            "method": "GET",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/mechanic/receive_report?mechanic_code=test&problem_details=test&vin=test"
+        },
+        {
+            "method": "GET",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/products"
+        },
+        {
+            "method": "GET",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/return_qr_code"
+        },
+        {
+            "method": "POST",
+            "status": 0,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/orders/return_order?order_id=1"
+        },
+        {
+            "method": "POST",
+            "status": 400,
+            "target": "http://crapi.apisec.ai/workshop/api/mechanic/signup"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/community/api/v2/community/posts"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/community/api/v2/community/posts/%7BpostId%7D/comment"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/community/api/v2/coupon/new-coupon"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/community/api/v2/coupon/validate-coupon"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/change-email"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/pictures"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/reset-password"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/verify-email-token"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/videos"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/vehicle/add_vehicle"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/vehicle/resend_email"
+        },
+        {
+            "method": "POST",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/apply_coupon"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/identity/api/auth/signup"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/identity/api/auth/v2/check-otp"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/identity/api/auth/v3/check-otp"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/merchant/contact_mechanic"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/orders"
+        },
+        {
+            "method": "POST",
+            "status": 406,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/products"
+        },
+        {
+            "method": "POST",
+            "status": 500,
+            "target": "http://crapi.apisec.ai/identity/api/auth/forget-password"
+        },
+        {
+            "method": "POST",
+            "status": 500,
+            "target": "http://crapi.apisec.ai/identity/api/auth/login"
+        },
+        {
+            "method": "POST",
+            "status": 500,
+            "target": "http://crapi.apisec.ai/identity/api/auth/v2.7/user/login-with-token"
+        },
+        {
+            "method": "POST",
+            "status": 500,
+            "target": "http://crapi.apisec.ai/identity/api/auth/v4.0/user/login-with-token"
+        },
+        {
+            "method": "PUT",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/identity/api/v2/user/videos/1"
+        },
+        {
+            "method": "PUT",
+            "status": 401,
+            "target": "http://crapi.apisec.ai/workshop/api/shop/orders/1"
+        }
+    ]
+}

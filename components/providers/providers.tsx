@@ -5,8 +5,8 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import * as React from 'react'
 import dynamic from 'next/dynamic'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
 import { ThemeProvider as StaticProvider } from 'next-themes'
+import NextTopLoader from 'nextjs-toploader';
 
 type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
 
@@ -25,10 +25,11 @@ function Providers({ children, ...props }: ThemeProviderProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <NextTopLoader color="linear-gradient(to right, white, blue, red)" showSpinner={false} />
       <NextThemeProvider  {...props} attribute="class" defaultTheme="system" enableSystem>
         <SessionProvider>{children}</SessionProvider>
       </NextThemeProvider>
-      <ReactQueryDevtools />
+      {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
 };

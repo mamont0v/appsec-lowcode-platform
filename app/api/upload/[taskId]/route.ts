@@ -1,8 +1,9 @@
+"server-only";
 import fs from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
-
-const TEMP_DIR_BASE = 'E:/temp';  // Замените на ваш путь
+import { v4 as uuidv4 } from "uuid";
+const TEMP_DIR_BASE = process.env.TEMP_DIR || '/tmp';  // Замените на ваш путь
 
 export async function GET(req: Request, { params }: { params: { taskId: string } }) {
     try {
